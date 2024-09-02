@@ -61,10 +61,11 @@
 
       <a-entity id="target" mindar-image-target="targetIndex: 0">
         <a-plane 
+          id="videoPlane"
           material="src: #video" 
           position="0 0 0" 
-          height="auto" 
-          width="auto" 
+          height="0.35" 
+          width="1" 
           rotation="0 0 0"  
           scale="1 1 1">
         </a-plane>
@@ -82,14 +83,14 @@
       const video = document.querySelector('#video');
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
-      const plane = document.querySelector('a-plane');
+      const videoPlane = document.querySelector('#videoPlane');
 
       video.muted = true;
       video.play();
 
       button.addEventListener('click', function() {
         if (video.muted) {
-          video.muted = false;  // Unmute the video
+          video.muted = false;
           video.play();
           button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
           buttonText.textContent = 'Pause';
@@ -114,23 +115,22 @@
         buttonText.textContent = 'Play with Sound';
       });
 
-      // Function to adjust the plane's aspect ratio based on video dimensions and orientation
-      function adjustPlaneSize() {
-        const aspectRatio = video.videoWidth / video.videoHeight;
-        if (window.innerWidth > window.innerHeight) {
-          // Landscape mode
-          plane.setAttribute('width', '1');
-          plane.setAttribute('height', `${1 / aspectRatio}`);
-        } else {
-          // Portrait mode
-          plane.setAttribute('height', '1');
-          plane.setAttribute('width', `${aspectRatio}`);
+      // Adjust video plane based on orientation
+      function adjustVideoPlane() {
+        if (window.innerWidth > window.innerHeight) { // Landscape
+          videoPlane.setAttribute('width', '1.5');
+          videoPlane.setAttribute('height', '0.75');
+        } else { // Portrait
+          videoPlane.setAttribute('width', '0.5');
+          videoPlane.setAttribute('height', '1');
         }
       }
 
-      // Adjust plane size when video is loaded and when the window is resized
-      video.addEventListener('loadedmetadata', adjustPlaneSize);
-      window.addEventListener('resize', adjustPlaneSize);
+      // Initial adjustment
+      adjustVideoPlane();
+
+      // Listen for orientation changes
+      window.addEventListener('resize', adjustVideoPlane);
     </script>
   </body>
 </html>
