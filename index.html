@@ -74,7 +74,7 @@
         <a-plane 
           material="src: #video" 
           position="0 0 0" 
-          height="0.36" 
+          height="0.35" 
           width="1" 
           rotation="0 0 0"  
           scale="1 1 1">
@@ -94,13 +94,14 @@
       const video = document.querySelector('#video');
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
+      let targetVisible = false;
 
       // Video is initially paused and muted
       video.pause();
       video.muted = true;
 
       button.addEventListener('click', function() {
-        if (video.paused) {
+        if (video.paused && targetVisible) {
           video.muted = false;  // Unmute the video
           video.play();  // Play the video
           button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
@@ -113,6 +114,7 @@
 
       const target = document.querySelector('#target');
       target.addEventListener('mindar-image-target-visible', () => {
+        targetVisible = true;
         if (!video.muted) {
           video.play();
           buttonText.textContent = 'Pause';
@@ -120,6 +122,7 @@
       });
 
       target.addEventListener('mindar-image-target-invisible', () => {
+        targetVisible = false;
         video.pause();
         buttonText.textContent = 'Play with Sound';
       });
