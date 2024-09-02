@@ -88,20 +88,19 @@
     </div>
 
     <!-- Custom Button -->
-    <button id="customButton" onclick="window.location.href='https://www.overlay-ai';">OVERLAY-AI</button>
+    <button id="customButton" onclick="window.location.href='https://www.yourwebsite.com';">Custom Button</button>
 
     <script>
       const video = document.querySelector('#video');
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
-      let targetVisible = false;
 
       // Video is initially paused and muted
       video.pause();
       video.muted = true;
 
       button.addEventListener('click', function() {
-        if (video.paused && targetVisible) {
+        if (video.paused) {
           video.muted = false;  // Unmute the video
           video.play();  // Play the video
           button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
@@ -114,15 +113,12 @@
 
       const target = document.querySelector('#target');
       target.addEventListener('mindar-image-target-visible', () => {
-        targetVisible = true;
         if (!video.muted) {
           video.play();
           buttonText.textContent = 'Pause';
         }
       });
-
       target.addEventListener('mindar-image-target-invisible', () => {
-        targetVisible = false;
         video.pause();
         buttonText.textContent = 'Play with Sound';
       });
