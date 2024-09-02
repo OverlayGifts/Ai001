@@ -4,87 +4,114 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
-      /* Ensure the scene takes up the full screen */
-      body, html {
-        margin: 0;
-        overflow: hidden;
-        height: 100%;
-        width: 100%;
-      }
-      a-scene {
-        height: 100%;
-        width: 100%;
-      }
-      /* Style the play button */
-      #playButton {
+      #playPauseButtonContainer {
         position: absolute;
         top: 20px;
         left: 20px;
-        z-index: 100;
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        border: none;
+        text-align: center;
+        z-index: 999;
+      }
+
+      #playPauseButton {
+        width: 50px;
+        height: 50px;
+        background: url('https://cdn-icons-png.flaticon.com/512/109/109197.png') no-repeat center center;
+        background-size: contain;
+        border: 2px solid #ffffff;
+        border-radius: 30%;
         cursor: pointer;
+        outline: none;
+      }
+
+      #playPauseButton:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      #playPauseText {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #ffffff;
+      }
+
+      #customButton {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1000;
+      }
+
+      #customButton:hover {
+        background-color: #0056b3;
       }
     </style>
   </head>
   <body>
-    <a-scene mindar-image="imageTargetSrc: ./targets5.mind" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" embedded>
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-        <!-- Video asset, plays inline with cross-origin set -->
-        <video id="video" src="vid2.mp4" crossorigin="anonymous" playsinline></video>
+        <video id="video" src="./vid2.mp4" autoplay loop="true" playsinline muted></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Plane for the video, set to dynamically adjust its size based on the video aspect ratio -->
-        <a-plane id="videoPlane" material="shader: flat; src: #video" position="0 0 0" height="1.777" width="1" rotation="0 0 0"></a-plane>
+      <a-entity id="target" mindar-image-target="targetIndex: 0">
+        <a-plane 
+          material="src: #video" 
+          position="0 0 0" 
+          height="0.35" 
+          width="1" 
+          rotation="0 0 0"  
+          scale="1 1 1">
+        </a-plane>
       </a-entity>
     </a-scene>
 
-    <!-- Play Button -->
-    <button id="playButton">Play Video with Audio</button>
+    <div id="playPauseButtonContainer">
+      <button id="playPauseButton"></button>
+      <div id="playPauseText">Play with Sound</div>
+    </div>
+
+    <!-- Custom Button -->
+    <button id="customButton" onclick="window.location.href='https://www.overlay-ai.com';">Custom Button</button>
 
     <script>
-      const video = document.getElementById('video');
-      const playButton = document.getElementById('playButton');
-      const videoPlane = document.getElementById('videoPlane');
+      const video = document.querySelector('#video');
+      const button = document.querySelector('#playPauseButton');
+      const buttonText = document.querySelector('#playPauseText');
 
-      // Adjust the plane's dimensions based on the video aspect ratio
-      video.addEventListener('loadedmetadata', () => {
-        const aspectRatio = video.videoWidth / video.videoHeight;
-        videoPlane.setAttribute('width', aspectRatio);
-        videoPlane.setAttribute('height', 1 / aspectRatio);
+      video.muted = true;
+      video.play();
+
+      button.addEventListener('click', function() {
+        if (video.muted) {
+          video.muted = false;  // Unmute the video
+          video.play();
+          button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
+          buttonText.textContent = 'Pause';
+        } else if (video.paused) {
+          video.play();
+          buttonText.textContent = 'Pause';
+        } else {
+          video.pause();
+          buttonText.textContent = 'Play with Sound';
+        }
       });
 
-      // Add event listener to the play button
-      playButton.addEventListener('click', () => {
-        video.muted = false;
-        video.volume = 1.0; // Set the volume to max
-        video.play().then(() => {
-          console.log('Video with audio is playing.');
-        }).catch((error) => {
-          console.error('Error attempting to play the video with audio:', error);
-        });
+      const target = document.querySelector('#target');
+      target.addEventListener('mindar-image-target-visible', () => {
+        if (!video.muted) {
+          video.play();
+          buttonText.textContent = 'Pause';
+        }
       });
-
-      // Log when the video is playing or encounters an error
-      video.addEventListener('play', () => {
-        console.log('Video with audio is playing.');
-      });
-
-      video.addEventListener('error', (e) => {
-        console.error('Error loading or playing video with audio:', e);
-      });
-
-      // Adjust the scene when the screen orientation changes
-      window.addEventListener('resize', () => {
-        const aspectRatio = video.videoWidth / video.videoHeight;
-        videoPlane.setAttribute('width', aspectRatio);
-        videoPlane.setAttribute('height', 1 / aspectRatio);
+      target.addEventListener('mindar-image-target-invisible', () => {
+        video.pause();
+        buttonText.textContent = 'Play with Sound';
       });
     </script>
   </body>
