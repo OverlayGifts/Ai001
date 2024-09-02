@@ -63,8 +63,8 @@
         <a-plane 
           material="src: #video" 
           position="0 0 0" 
-          height="0.35" 
-          width="1" 
+          height="auto" 
+          width="auto" 
           rotation="0 0 0"  
           scale="1 1 1">
         </a-plane>
@@ -76,13 +76,13 @@
       <div id="playPauseText">Play with Sound</div>
     </div>
 
-    <!-- Custom Button -->
-    <button id="customButton" onclick="window.location.href='https://www.overlay-ai.com';">Custom Button</button>
+    <button id="customButton" onclick="window.location.href='https://www.yourwebsite.com';">Custom Button</button>
 
     <script>
       const video = document.querySelector('#video');
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
+      const plane = document.querySelector('a-plane');
 
       video.muted = true;
       video.play();
@@ -113,6 +113,24 @@
         video.pause();
         buttonText.textContent = 'Play with Sound';
       });
+
+      // Function to adjust the plane's aspect ratio based on video dimensions and orientation
+      function adjustPlaneSize() {
+        const aspectRatio = video.videoWidth / video.videoHeight;
+        if (window.innerWidth > window.innerHeight) {
+          // Landscape mode
+          plane.setAttribute('width', '1');
+          plane.setAttribute('height', `${1 / aspectRatio}`);
+        } else {
+          // Portrait mode
+          plane.setAttribute('height', '1');
+          plane.setAttribute('width', `${aspectRatio}`);
+        }
+      }
+
+      // Adjust plane size when video is loaded and when the window is resized
+      video.addEventListener('loadedmetadata', adjustPlaneSize);
+      window.addEventListener('resize', adjustPlaneSize);
     </script>
   </body>
 </html>
