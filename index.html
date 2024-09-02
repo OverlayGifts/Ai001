@@ -54,7 +54,7 @@
   <body>
     <a-scene mindar-image="imageTargetSrc: ./targets.mind" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-        <video id="video" src="./vid2.mp4" autoplay loop="true" playsinline muted></video>
+        <video id="video" src="./vid2.mp4" playsinline muted></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -84,20 +84,18 @@
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
 
+      // Video is initially paused and muted
+      video.pause();
       video.muted = true;
-      video.play();
 
       button.addEventListener('click', function() {
-        if (video.muted) {
+        if (video.paused) {
           video.muted = false;  // Unmute the video
-          video.play();
+          video.play();  // Play the video
           button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
           buttonText.textContent = 'Pause';
-        } else if (video.paused) {
-          video.play();
-          buttonText.textContent = 'Pause';
         } else {
-          video.pause();
+          video.pause();  // Pause the video
           buttonText.textContent = 'Play with Sound';
         }
       });
