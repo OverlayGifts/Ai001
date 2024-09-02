@@ -54,7 +54,7 @@
   <body>
     <a-scene mindar-image="imageTargetSrc: ./targets.mind" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-        <video id="video" src="./vid2.mp4" loop playsinline webkit-playsinline></video>
+        <video id="video" src="./vid2.mp4" autoplay loop="true" playsinline muted></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -84,12 +84,8 @@
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
 
-      function playVideo() {
-        video.muted = true; // Start muted due to mobile autoplay restrictions
-        video.play();
-      }
-
-      window.addEventListener('load', playVideo);
+      video.muted = true;
+      video.play();
 
       button.addEventListener('click', function() {
         if (video.muted) {
