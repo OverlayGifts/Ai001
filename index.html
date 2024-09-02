@@ -33,7 +33,7 @@
         color: #ffffff;
       }
 
-      #leftBottomButton {
+      #customButton {
         position: fixed;
         bottom: 20px;
         left: 20px;
@@ -44,10 +44,9 @@
         border-radius: 5px;
         cursor: pointer;
         z-index: 1000;
-        text-decoration: none;
       }
 
-      #leftBottomButton:hover {
+      #customButton:hover {
         background-color: #0056b3;
       }
     </style>
@@ -77,14 +76,14 @@
       <div id="playPauseText">Play with Sound</div>
     </div>
 
-    <a href="https://www.overlaygifts.com" id="leftBottomButton" target="_blank">Visit My Website</a>
+    <!-- Custom Button -->
+    <button id="customButton" onclick="window.location.href='https://www.yourwebsite.com';">Custom Button</button>
 
     <script>
       const video = document.querySelector('#video');
       const button = document.querySelector('#playPauseButton');
       const buttonText = document.querySelector('#playPauseText');
 
-      // Initially mute the video
       video.muted = true;
       video.play();
 
@@ -94,26 +93,4 @@
           video.play();
           button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
           buttonText.textContent = 'Pause';
-        } else if (video.paused) {
-          video.play();
-          buttonText.textContent = 'Pause';
-        } else {
-          video.pause();
-          buttonText.textContent = 'Play with Sound';
         }
-      });
-
-      const target = document.querySelector('#target');
-      target.addEventListener('mindar-image-target-visible', () => {
-        if (!video.muted) {
-          video.play();
-          buttonText.textContent = 'Pause';
-        }
-      });
-      target.addEventListener('mindar-image-target-invisible', () => {
-        video.pause();
-        buttonText.textContent = 'Play with Sound';
-      });
-    </script>
-  </body>
-</html>
